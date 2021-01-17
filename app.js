@@ -78,13 +78,32 @@ app.route("/articles/:articleTitle")
         {title: req.body.title, content: req.body.content}, 
         {overwrite: true}, 
         function(err){
-            console.log(req.params.articleTitle);
-            console.log(req.body.title);
             if (!err) {
                 res.send("Successfully updated article");
             } else {
                 res.send("No article was found");
             }
+    });
+})
+.patch(function(req, res){
+    Article.updateOne(
+        {title: req.params.articleTitle},
+        {$set: req.body},
+        function(err) {
+            if (!err) {
+                res.send("Successfully updated article");
+            } else {
+                res.send("No article was found");
+            }
+        });
+})
+.delete(function(req, res){
+    Article.deleteOne({title: req.params.articleTitle}, function(err){
+        if (!err) {
+            res.send("Sucessfully deleted article");
+        } else {
+            res.send(err);
+        }
     });
 });
 
