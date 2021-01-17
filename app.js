@@ -35,6 +35,7 @@ app.get("/articles", function(req, res){
     });
 });
 
+//Post
 app.post("/articles", function(req, res){
     const data = req.body;
 
@@ -46,6 +47,17 @@ app.post("/articles", function(req, res){
     newArticle.save(function(err){
         if (!err) {
             res.send("Successfully added new article");
+        } else {
+            res.send(err);
+        }
+    });
+});
+
+//Delete
+app.delete("/articles", function(req, res){
+    Article.deleteMany(function(err){
+        if (!err) {
+            res.send("Sucessfully deleted all articles");
         } else {
             res.send(err);
         }
