@@ -24,9 +24,9 @@ const articleSchema = {
 
 const Article = mongoose.model("Article", articleSchema);
 
-//RESTful
+//API - all articles
 app.route("/articles")
-.get("/articles", function(req, res){
+.get(function(req, res){
     Article.find(function(err, foundArticles){
         if (!err) {
             res.send(foundArticles);
@@ -35,7 +35,7 @@ app.route("/articles")
         }
     });
 })
-.post("/articles", function(req, res){
+.post(function(req, res){
     const data = req.body;
 
     const newArticle = new Article({
@@ -51,13 +51,40 @@ app.route("/articles")
         }
     });
 })
-.delete("/articles", function(req, res){
+.delete(function(req, res){
     Article.deleteMany(function(err){
         if (!err) {
             res.send("Sucessfully deleted all articles");
         } else {
             res.send(err);
         }
+    });
+});
+
+//API - specific articles
+app.route("/articles/:articleTitle")
+.get(function(req, res){
+    Article.findOne({title: req.params.articleTitle}, function(err, foundArticle) {
+        if (!err) {
+            res.send(foundArticle);
+        } else {
+            res.send("No articles matching the title");
+        }
+    });
+})
+.put(function(req, res){
+    Article.update(
+        {title: req.params.articleTitle}, 
+        {title: req.body.title, content: req.body.content}, 
+        {overwrite: true}, 
+        function(err){
+            console.log(req.params.articleTitle);
+            console.log(req.body.title);
+            if (!err) {
+                res.send("Successfully updated article");
+            } else {
+                res.send("No article was found");
+            }
     });
 });
 
